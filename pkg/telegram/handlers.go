@@ -21,20 +21,15 @@ func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	case new:
 		return b.handleNew(message)
 	default:
-		return b.handleUnkownCommand(message)
+		return b.handleUnknownCommand(message)
 	}
 }
-
 
 func (b *Bot) handleMessage(message *tgbotapi.Message) {
 	log.Printf("From %+v", message.From)
 
 	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
 	b.bot.Send(msg)
-}
-
-type Qwe struct {
-	Id int
 }
 
 func (b *Bot) handleNew(message *tgbotapi.Message) error {
@@ -62,20 +57,13 @@ func (b *Bot) handleNew(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleStartMessage(message *tgbotapi.Message) error {
-	user, ferr := b.service.GetUserByUserId(message.From.ID)
-	if ferr != nil {
-		log.Println("Error ->>", ferr)
-	}
-
-	fmt.Println("User -->", user)
-
 	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
 		_, err := b.bot.Send(msg)
 		return err
 }
 
-func (b *Bot) handleUnkownCommand(message *tgbotapi.Message) error {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "I don't know this comand")
+func (b *Bot) handleUnknownCommand(message *tgbotapi.Message) error {
+	msg := tgbotapi.NewMessage(message.Chat.ID, "I don't know this command")
 		_, err := b.bot.Send(msg)
 		return err
 }

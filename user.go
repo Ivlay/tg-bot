@@ -6,4 +6,5 @@ type User struct {
 	UserId    int    `json:"userId" db:"user_id"`
 	FirstName string `json:"firstName" db:"firstname"`
 	UserName  string `json:"userName" db:"username"`
+	CreatedAt string `json:"-" db:"created_at"`
 }
