@@ -8,6 +8,7 @@ import (
 type User interface {
 	CreateUser(user tgbot.User) (int, error)
 	GetUserByUserId(id int) (tgbot.User, error)
+	FindOrCreateUser(user tgbot.User) (int, error)
 }
 
 type Service struct {

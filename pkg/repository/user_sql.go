@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"fmt"
 
 	tgbot "github.com/Ivlay/go-telegram-bot"
@@ -17,7 +18,7 @@ func NewUserSql(db *sqlx.DB) *UserSql {
 
 func (r* UserSql) CreateUser(user tgbot.User) (int, error) {
 	var id int
-	query := fmt.Sprintf("INSERT INTO %s (userName, firstName, chat_id, user_id) values ($1, $2, $3, $4) RETURNING id", usersTable)
+	query := fmt.Sprintf("insert into %s (userName, firstName, chat_id, user_id) values ($1, $2, $3, $4) returning user_id", usersTable)
 	row := r.db.QueryRow(query, user.UserName, user.FirstName, user.ChatId, user.UserId)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
@@ -29,9 +30,19 @@ func (r* UserSql) CreateUser(user tgbot.User) (int, error) {
 func (r* UserSql) GetUserByUserId(id int) (tgbot.User, error) {
 	var user tgbot.User
 
-	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1", usersTable)
+	query := fmt.Sprintf("select * from %s where user_id=$1", usersTable)
 
 	err := r.db.Get(&user, query, id)
 
 	return user, err
+}
+
+func (r* UserSql) FindOrCreateUser(user tgbot.User) (int, error) {
+	u, err := r.GetUserByUserId(user.UserId);
+	fmt.Printf("Err %s", err)
+	if err == sql.ErrNoRows {
+		return r.CreateUser(user)
+	}
+
+	return u.UserId, nil
 }

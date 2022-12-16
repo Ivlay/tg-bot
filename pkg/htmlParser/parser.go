@@ -1,10 +1,18 @@
 package htmlParser
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+)
+
+const (
+	macbook_pro_14_2021 = "#macbook_pro_14_2021_"
+	macbook_pro_16_2021 = "#macbook_pro_16_2021_"
+	mac_studio = "#mac_studio_"
 )
 
 type HtmlParser struct {
@@ -29,9 +37,13 @@ func (p *HtmlParser) parse(idNode string) string {
 		log.Fatal(err)
 	}
 
-	return doc.Find(idNode).Find("li").First().Text()
+	words := doc.Find(idNode).Find("li").Not(":last-of-type").Map(func(_ int, sel *goquery.Selection) string {
+		return fmt.Sprintf("%s\n", sel.Text())
+	})
+
+	return strings.Join(words, "")
 }
 
-func (p *HtmlParser) GetPrice() string {
-	return p.parse("#macbook_pro_14_2021_")
+func (p *HtmlParser) GetPrice(idNode string) string {
+	return p.parse(idNode)
 }

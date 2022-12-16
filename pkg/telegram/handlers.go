@@ -34,22 +34,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 
 func (b *Bot) handleNew(message *tgbotapi.Message) error {
 	parser := htmlParser.NewParser("https://aj.ru/")
-	message.Text = parser.GetPrice()
-	
-	u := tgbot.User{
-		ChatId: message.Chat.ID,
-		FirstName: message.Chat.FirstName,
-		UserId: message.From.ID,
-		UserName: message.Chat.UserName,
-	}
-
-	userId, err := b.service.CreateUser(u);
-
-	fmt.Println("userId", userId)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
+	message.Text = parser.GetPrice("#macbook_pro_16_2021_")
 
 	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
 		_, sendErr := b.bot.Send(msg)
@@ -57,7 +42,26 @@ func (b *Bot) handleNew(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleStartMessage(message *tgbotapi.Message) error {
-	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
+	u := tgbot.User{
+		ChatId: message.Chat.ID,
+		FirstName: message.Chat.FirstName,
+		UserId: message.From.ID,
+	}
+
+	if message.Chat.UserName != "" {
+		u.UserName = message.Chat.UserName
+	} else {
+		u.UserName = message.Chat.FirstName
+	}
+
+	userId, errr := b.service.FindOrCreateUser(u)
+	if errr != nil {
+		log.Default()
+	}
+
+	fMsg := fmt.Sprintf("Здарова пидарок, твой id: %d \n", userId)
+
+	msg := tgbotapi.NewMessage(message.Chat.ID, fMsg)
 		_, err := b.bot.Send(msg)
 		return err
 }

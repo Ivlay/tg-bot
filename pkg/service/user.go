@@ -20,3 +20,7 @@ func (r *UserService) CreateUser(user tgbot.User) (int, error) {
 func (r *UserService) GetUserByUserId(id int) (tgbot.User, error) {
 	return r.repo.GetUserByUserId(id)
 }
+
+func (r *UserService) FindOrCreateUser(user tgbot.User) (int, error) {
+	return r.repo.FindOrCreateUser(user)
+}
