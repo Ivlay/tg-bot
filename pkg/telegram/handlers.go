@@ -28,8 +28,11 @@ func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 func (b *Bot) handleMessage(message *tgbotapi.Message) {
 	log.Printf("From %+v", message.From)
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
-	b.bot.Send(msg)
+	if message.From.ID == 1652506912 {
+	
+		msg := tgbotapi.NewMessage(message.Chat.ID, "Пидарок пишет что-то тут")
+		b.bot.Send(msg)
+	}
 }
 
 func (b *Bot) handleNew(message *tgbotapi.Message) error {
