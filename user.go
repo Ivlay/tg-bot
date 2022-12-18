@@ -6,6 +6,11 @@ type User struct {
 	UserId    int    `json:"userId" db:"user_id"`
 	FirstName string `json:"firstName" db:"firstname"`
 	UserName  string `json:"userName" db:"username"`
-	UpdatedAt string `json:"-" db:"updated_at"`
 	CreatedAt string `json:"-" db:"created_at"`
+}
+
+type UserList struct {
+	Id        int
+	UserId    int
+	ProductId string
 }

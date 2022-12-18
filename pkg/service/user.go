@@ -14,13 +14,13 @@ func NewUserService(repo repository.User) *UserService {
 }
 
 func (r *UserService) CreateUser(user tgbot.User) (int, error) {
-	return r.repo.CreateUser(user)
+	return r.repo.Create(user)
 }
 
 func (r *UserService) GetUserByUserId(id int) (tgbot.User, error) {
-	return r.repo.GetUserByUserId(id)
+	return r.repo.GetByUserId(id)
 }
 
 func (r *UserService) FindOrCreateUser(user tgbot.User) (int, error) {
-	return r.repo.FindOrCreateUser(user)
+	return r.repo.FindOrCreate(user)
 }

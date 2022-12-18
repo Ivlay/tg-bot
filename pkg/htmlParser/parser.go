@@ -37,11 +37,16 @@ func (p *HtmlParser) parse(idNode string) string {
 		log.Fatal(err)
 	}
 
-	words := doc.Find(idNode).Find("li").Not(":last-of-type").Map(func(_ int, sel *goquery.Selection) string {
-		return fmt.Sprintf("%s\n", sel.Text())
+	doc.Find(idNode).Find("li").Not(":last-of-type").Each(func(_ int, sel *goquery.Selection) {
+		fmt.Println("Splitted-->", strings.Split(sel.Text(), " — ")[0])
+		fmt.Println("Splitted-->", strings.Split(sel.Text(), " — ")[1])
 	})
 
-	return strings.Join(words, "")
+	return "In progress..."
+}
+
+func (p *HtmlParser) PrepareProducts() {
+	
 }
 
 func (p *HtmlParser) GetPrice(idNode string) string {

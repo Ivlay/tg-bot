@@ -6,17 +6,25 @@ import (
 )
 
 type User interface {
-	CreateUser(user tgbot.User) (int, error)
-	GetUserByUserId(id int) (tgbot.User, error)
-	FindOrCreateUser(user tgbot.User) (int, error)
+	Create(user tgbot.User) (int, error)
+	GetByUserId(id int) (tgbot.User, error)
+	FindOrCreate(user tgbot.User) (int, error)
+}
+
+type Product interface {
+	Create() ()
+	Update() ()
+	GetByUserId() ()
 }
 
 type Repository struct {
 	User
+	Product
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		User: NewUserSql(db),
+		Product: NewProductSql(db),
 	}
 }
