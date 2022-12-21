@@ -15,6 +15,7 @@ type Product interface {
 	Create() ()
 	Update() ()
 	GetByUserId() ()
+	Prepare() ()
 }
 
 type Repository struct {

@@ -13,14 +13,14 @@ func NewUserService(repo repository.User) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (r *UserService) CreateUser(user tgbot.User) (int, error) {
+func (r *UserService) Create(user tgbot.User) (int, error) {
 	return r.repo.Create(user)
 }
 
-func (r *UserService) GetUserByUserId(id int) (tgbot.User, error) {
+func (r *UserService) GetByUserId(id int) (tgbot.User, error) {
 	return r.repo.GetByUserId(id)
 }
 
-func (r *UserService) FindOrCreateUser(user tgbot.User) (int, error) {
+func (r *UserService) FindOrCreate(user tgbot.User) (int, error) {
 	return r.repo.FindOrCreate(user)
 }

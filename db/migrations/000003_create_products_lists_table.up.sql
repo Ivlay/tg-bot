@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users_lists
+CREATE TABLE IF NOT EXISTS products_lists
 (
   id      serial not null unique,
   user_id int references users (user_id) not null,

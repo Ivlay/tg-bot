@@ -5,7 +5,6 @@ import (
 	"log"
 
 	tgbot "github.com/Ivlay/go-telegram-bot"
-	"github.com/Ivlay/go-telegram-bot/pkg/htmlParser"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
@@ -36,8 +35,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 }
 
 func (b *Bot) handleNew(message *tgbotapi.Message) error {
-	parser := htmlParser.NewParser("https://aj.ru/")
-	message.Text = parser.GetPrice("#macbook_pro_16_2021_")
+	message.Text = b.service.HtmlParser.GetPrice("#macbook_pro_16_2021_")
 
 	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
 		_, sendErr := b.bot.Send(msg)
@@ -57,12 +55,12 @@ func (b *Bot) handleStartMessage(message *tgbotapi.Message) error {
 		u.UserName = message.Chat.FirstName
 	}
 
-	userId, errr := b.service.FindOrCreateUser(u)
+	userId, errr := b.service.FindOrCreate(u)
 	if errr != nil {
 		log.Default()
 	}
 
-	fMsg := fmt.Sprintf("Здарова пидарок, твой id: %d \n", userId)
+	fMsg := fmt.Sprintf("Здарова пидарок, твой id: %d\n", userId)
 
 	msg := tgbotapi.NewMessage(message.Chat.ID, fMsg)
 		_, err := b.bot.Send(msg)

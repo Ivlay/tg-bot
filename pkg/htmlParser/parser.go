@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -38,8 +39,13 @@ func (p *HtmlParser) parse(idNode string) string {
 	}
 
 	doc.Find(idNode).Find("li").Not(":last-of-type").Each(func(_ int, sel *goquery.Selection) {
-		fmt.Println("Splitted-->", strings.Split(sel.Text(), " — ")[0])
-		fmt.Println("Splitted-->", strings.Split(sel.Text(), " — ")[1])
+		arrStr := strings.Split(sel.Text(), " — ")
+		price := regexp.MustCompile("[0-9]+").FindString(arrStr[1]);
+
+		if price != "" {
+			fmt.Println("Mac book name", arrStr[0])
+			fmt.Println(price)
+		}
 	})
 
 	return "In progress..."

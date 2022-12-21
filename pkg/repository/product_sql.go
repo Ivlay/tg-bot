@@ -23,3 +23,7 @@ func (r *ProductSql) Update() {
 func (r *ProductSql) GetByUserId() {
 
 }
+
+func (r *ProductSql) Prepare() {
+
+}

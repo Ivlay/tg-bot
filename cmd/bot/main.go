@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/Ivlay/go-telegram-bot/pkg/htmlParser"
 	"github.com/Ivlay/go-telegram-bot/pkg/repository"
 	"github.com/Ivlay/go-telegram-bot/pkg/service"
 	"github.com/Ivlay/go-telegram-bot/pkg/telegram"
@@ -36,7 +37,8 @@ func main() {
 	}
 
 	repos := repository.NewRepository(db)
-	service := service.NewService(repos)
+	parser := htmlParser.NewParser("https://aj.ru/")
+	service := service.NewService(repos, parser)
 
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TG_TOKEN"))
 	if err != nil {
