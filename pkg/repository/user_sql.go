@@ -16,7 +16,7 @@ func NewUserSql(db *sqlx.DB) *UserSql {
 	return &UserSql{db: db}
 }
 
-func (r* UserSql) Create(user tgbot.User) (int, error) {
+func (r *UserSql) Create(user tgbot.User) (int, error) {
 	var id int
 	query := fmt.Sprintf("insert into %s (userName, firstName, chat_id, user_id) values ($1, $2, $3, $4) returning user_id", usersTable)
 	row := r.db.QueryRow(query, user.UserName, user.FirstName, user.ChatId, user.UserId)
@@ -24,10 +24,10 @@ func (r* UserSql) Create(user tgbot.User) (int, error) {
 		return 0, err
 	}
 
-	return id, nil;
+	return id, nil
 }
 
-func (r* UserSql) GetByUserId(id int) (tgbot.User, error) {
+func (r *UserSql) GetByUserId(id int) (tgbot.User, error) {
 	var user tgbot.User
 
 	query := fmt.Sprintf("select * from %s where user_id=$1", usersTable)
@@ -37,12 +37,16 @@ func (r* UserSql) GetByUserId(id int) (tgbot.User, error) {
 	return user, err
 }
 
-func (r* UserSql) FindOrCreate(user tgbot.User) (int, error) {
-	u, err := r.GetByUserId(user.UserId);
+func (r *UserSql) FindOrCreate(user tgbot.User) (int, error) {
+	u, err := r.GetByUserId(user.UserId)
 	fmt.Printf("Err %s", err)
 	if err == sql.ErrNoRows {
 		return r.Create(user)
 	}
 
 	return u.UserId, nil
+}
+
+func (r *UserSql) CreateSubscription() {
+
 }

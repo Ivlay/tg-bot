@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS users
 (
-  id            serial       not null unique,
-  firstname     varchar(255) not null,
-  username      varchar(255) not null,
-  chat_id       int primary key not null unique,
-  user_id       int not null unique,
-  created_at    timestamp NOT NULL DEFAULT NOW()
+  id         serial       not null unique,
+  firstname  varchar(255) not null,
+  username   varchar(255) not null,
+  chat_id    int primary key not null unique,
+  user_id    int not null unique,
+  created_at timestamp NOT NULL DEFAULT NOW()
 );

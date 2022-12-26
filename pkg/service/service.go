@@ -13,22 +13,24 @@ type User interface {
 }
 
 type Product interface {
-	Create() ()
-	GetByUserId() ()
-	Update() ()
-	Prepare() ()
+	Create()
+	GetByUserId()
+	Update()
+	Prepare()
+}
+
+type Parser interface {
+	FindNodes()
 }
 
 type Service struct {
 	User
 	Product
-	HtmlParser *htmlParser.HtmlParser
 }
 
 func NewService(repos *repository.Repository, parser *htmlParser.HtmlParser) *Service {
 	return &Service{
-		User: NewUserService(repos.User),
-		Product: NewProductService(repos.Product),
-		HtmlParser: parser,
+		User:    NewUserService(repos.User),
+		Product: NewProductService(repos.Product, parser),
 	}
 }

@@ -10,7 +10,7 @@ import (
 
 const (
 	commandStart = "start"
-	new = "new"
+	new          = "new"
 )
 
 func (b *Bot) handleCommand(message *tgbotapi.Message) error {
@@ -28,25 +28,25 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 	log.Printf("From %+v", message.From)
 
 	if message.From.ID == 1652506912 {
-	
+
 		msg := tgbotapi.NewMessage(message.Chat.ID, "Пидарок пишет что-то тут")
 		b.bot.Send(msg)
 	}
 }
 
 func (b *Bot) handleNew(message *tgbotapi.Message) error {
-	message.Text = b.service.HtmlParser.GetPrice("#macbook_pro_16_2021_")
+	b.service.Product.Prepare()
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
-		_, sendErr := b.bot.Send(msg)
-		return sendErr
+	msg := tgbotapi.NewMessage(message.Chat.ID, "In progress...")
+	_, sendErr := b.bot.Send(msg)
+	return sendErr
 }
 
 func (b *Bot) handleStartMessage(message *tgbotapi.Message) error {
 	u := tgbot.User{
-		ChatId: message.Chat.ID,
+		ChatId:    message.Chat.ID,
 		FirstName: message.Chat.FirstName,
-		UserId: message.From.ID,
+		UserId:    message.From.ID,
 	}
 
 	if message.Chat.UserName != "" {
@@ -63,12 +63,12 @@ func (b *Bot) handleStartMessage(message *tgbotapi.Message) error {
 	fMsg := fmt.Sprintf("Здарова пидарок, твой id: %d\n", userId)
 
 	msg := tgbotapi.NewMessage(message.Chat.ID, fMsg)
-		_, err := b.bot.Send(msg)
-		return err
+	_, err := b.bot.Send(msg)
+	return err
 }
 
 func (b *Bot) handleUnknownCommand(message *tgbotapi.Message) error {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "I don't know this command")
-		_, err := b.bot.Send(msg)
-		return err
+	_, err := b.bot.Send(msg)
+	return err
 }

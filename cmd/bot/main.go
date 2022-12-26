@@ -24,12 +24,12 @@ func main() {
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
-		Host: viper.GetString("db.host"),
-		Port: viper.GetString("db.port"),
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
 		Username: viper.GetString("db.username"),
 		Password: os.Getenv("DB_PASSWORD"),
-		DBName: os.Getenv("DB_NAME"),
-		SSLMode: viper.GetString("db.sslmode"),
+		DBName:   os.Getenv("DB_NAME"),
+		SSLMode:  viper.GetString("db.sslmode"),
 	})
 
 	if err != nil {
@@ -39,6 +39,8 @@ func main() {
 	repos := repository.NewRepository(db)
 	parser := htmlParser.NewParser("https://aj.ru/")
 	service := service.NewService(repos, parser)
+
+	service.Product.Prepare()
 
 	bot, err := tgbotapi.NewBotAPI(os.Getenv("TG_TOKEN"))
 	if err != nil {

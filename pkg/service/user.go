@@ -24,3 +24,7 @@ func (r *UserService) GetByUserId(id int) (tgbot.User, error) {
 func (r *UserService) FindOrCreate(user tgbot.User) (int, error) {
 	return r.repo.FindOrCreate(user)
 }
+
+func (r *UserService) CreateSubscription() {
+
+}

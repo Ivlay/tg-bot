@@ -8,13 +8,13 @@ import (
 )
 
 type Bot struct {
-	bot *tgbotapi.BotAPI
+	bot     *tgbotapi.BotAPI
 	service *service.Service
 }
 
 func NewBot(bot *tgbotapi.BotAPI, services *service.Service) *Bot {
 	return &Bot{
-		bot: bot,
+		bot:     bot,
 		service: services,
 	}
 }
@@ -39,7 +39,8 @@ func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
 	for update := range updates {
 		if update.Message != nil {
 			if update.Message.IsCommand() {
-				err := b.handleCommand(update.Message); if err != nil {
+				err := b.handleCommand(update.Message)
+				if err != nil {
 					log.Fatal(err)
 				}
 				continue

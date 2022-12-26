@@ -12,10 +12,10 @@ type User interface {
 }
 
 type Product interface {
-	Create() ()
-	Update() ()
-	GetByUserId() ()
-	Prepare() ()
+	Create()
+	Update()
+	GetByUserId()
+	Prepare(products []tgbot.Product) error
 }
 
 type Repository struct {
@@ -25,7 +25,7 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		User: NewUserSql(db),
+		User:    NewUserSql(db),
 		Product: NewProductSql(db),
 	}
 }
