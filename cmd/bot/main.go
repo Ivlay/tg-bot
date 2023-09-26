@@ -1,17 +1,21 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 
+	"github.com/Ivlay/go-telegram-bot/pkg/bot"
 	"github.com/Ivlay/go-telegram-bot/pkg/htmlParser"
 	"github.com/Ivlay/go-telegram-bot/pkg/repository"
 	"github.com/Ivlay/go-telegram-bot/pkg/service"
-	"github.com/Ivlay/go-telegram-bot/pkg/telegram"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
+)
+
+var (
+	debug = flag.Bool("debug", false, "-debug=true")
 )
 
 func main() {
@@ -36,23 +40,22 @@ func main() {
 		log.Fatalf("failed to init db: %s", err.Error())
 	}
 
-	repos := repository.NewRepository(db)
-	parser := htmlParser.NewParser("https://aj.ru/")
-	service := service.NewService(repos, parser)
+	token := os.Getenv("TG_TOKEN")
+	if token == "" {
+		log.Fatal("bot token must be provided")
+	}
 
-	service.Product.Prepare()
-
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("TG_TOKEN"))
+	repos := repository.New(db)
+	parser := htmlParser.New("https://aj.ru/")
+	service := service.New(repos, parser)
+	bot, err := bot.New(service, token)
 	if err != nil {
-		log.Panic(err)
+		log.Fatal("failed to create bot", err.Error())
 	}
 
-	bot.Debug = true
+	bot.Debug = *debug
 
-	telegramBot := telegram.NewBot(bot, service)
-	if err := telegramBot.Start(); err != nil {
-		log.Fatal(err)
-	}
+	// go bot.Run()
 }
 
 func initConfig() error {

@@ -28,9 +28,12 @@ type Service struct {
 	Product
 }
 
-func NewService(repos *repository.Repository, parser *htmlParser.HtmlParser) *Service {
+func New(repos *repository.Repository, parser *htmlParser.HtmlParser) *Service {
+	UserService := NewUserService(repos.User)
+	ProductService := NewProductService(repos.Product, parser)
+
 	return &Service{
-		User:    NewUserService(repos.User),
-		Product: NewProductService(repos.Product, parser),
+		User:    UserService,
+		Product: ProductService,
 	}
 }

@@ -18,7 +18,7 @@ func NewUserSql(db *sqlx.DB) *UserSql {
 
 func (r *UserSql) Create(user tgbot.User) (int, error) {
 	var id int
-	query := fmt.Sprintf("insert into %s (userName, firstName, chat_id, user_id) values ($1, $2, $3, $4) returning user_id", usersTable)
+	query := fmt.Sprintf("insert into %s (userName, firstName, chat_id, user_id) values ($1, $2, $3, $4) returning id", usersTable)
 	row := r.db.QueryRow(query, user.UserName, user.FirstName, user.ChatId, user.UserId)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
@@ -39,12 +39,13 @@ func (r *UserSql) GetByUserId(id int) (tgbot.User, error) {
 
 func (r *UserSql) FindOrCreate(user tgbot.User) (int, error) {
 	u, err := r.GetByUserId(user.UserId)
-	fmt.Printf("Err %s", err)
-	if err == sql.ErrNoRows {
+	switch err {
+	case sql.ErrNoRows:
+		fmt.Printf("User not found, try to create\n %s", err.Error())
 		return r.Create(user)
+	default:
+		return u.UserId, err
 	}
-
-	return u.UserId, nil
 }
 
 func (r *UserSql) CreateSubscription() {

@@ -23,7 +23,7 @@ type Repository struct {
 	Product
 }
 
-func NewRepository(db *sqlx.DB) *Repository {
+func New(db *sqlx.DB) *Repository {
 	return &Repository{
 		User:    NewUserSql(db),
 		Product: NewProductSql(db),

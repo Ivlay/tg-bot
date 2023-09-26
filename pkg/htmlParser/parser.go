@@ -21,7 +21,7 @@ type HtmlParser struct {
 	url string
 }
 
-func NewParser(url string) *HtmlParser {
+func New(url string) *HtmlParser {
 	return &HtmlParser{url: url}
 }
 
