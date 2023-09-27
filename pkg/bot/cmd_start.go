@@ -6,6 +6,13 @@ import (
 
 	tgbot "github.com/Ivlay/go-telegram-bot"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"go.uber.org/zap"
+)
+
+type replyKeyboardValue string
+
+const (
+	ReplyProducts = replyKeyboardValue("Товары")
 )
 
 func (b *bot) CmdStart(upd tgbotapi.Update) {
@@ -32,7 +39,16 @@ func (b *bot) CmdStart(upd tgbotapi.Update) {
 	reply := tgbotapi.NewMessage(upd.Message.Chat.ID, fmt.Sprintf(message, name))
 	reply.ParseMode = "html"
 
+	keyboard := tgbotapi.NewReplyKeyboard(
+		tgbotapi.NewKeyboardButtonRow(
+			tgbotapi.NewKeyboardButton(string(ReplyProducts)),
+		),
+	)
+
+	reply.ReplyMarkup = keyboard
+	reply.DisableWebPagePreview = true
+
 	if err := b.apiRequest(reply); err != nil {
-		log.Fatal("Failed to send start message", err.Error())
+		b.logger.Error("Failed to send start message", zap.Error(err))
 	}
 }

@@ -10,8 +10,8 @@ type commandEntity struct {
 
 const (
 	StartCmdKey          = commandKey("start")
-	HelpCmdKey           = commandKey("help")
 	MySubscriptionCmdKey = commandKey("subscriptions")
+	ProductsKey          = commandKey("products")
 )
 
 type commandKey string
@@ -27,6 +27,7 @@ func (b *bot) initCommands() error {
 
 	tgCommands := make([]tgbotapi.BotCommand, 0, len(commands))
 	for _, cmd := range commands {
+		b.commands[cmd.key] = cmd
 		tgCommands = append(tgCommands, tgbotapi.BotCommand{
 			Command:     "/" + string(cmd.key),
 			Description: cmd.desc,
@@ -38,6 +39,12 @@ func (b *bot) initCommands() error {
 	return b.apiRequest(config)
 }
 
-// func (b *bot) replyToCommand(text string) (commandEntity, bool) {
-// 	switch
-// }
+func (b *bot) replyToCommand(text string) (commandEntity, bool) {
+	switch replyKeyboardValue(text) {
+	case ReplyProducts:
+		cmd, ok := b.commands[ProductsKey]
+		return cmd, ok
+	}
+
+	return commandEntity{}, false
+}

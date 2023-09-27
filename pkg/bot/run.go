@@ -1,6 +1,9 @@
 package bot
 
-import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+import (
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"go.uber.org/zap"
+)
 
 func (b *bot) Run() {
 	updetesCfg := tgbotapi.UpdateConfig{
@@ -14,10 +17,20 @@ func (b *bot) Run() {
 }
 
 func (b *bot) processUpdate(upd tgbotapi.Update) {
-	if upd.MyChatMember != nil {
-		status := upd.MyChatMember.NewChatMember.Status
-		if status == "left" || status == "kicked" {
+	if upd.Message != nil {
+		if upd.Message.IsCommand() {
+			key := upd.Message.Command()
+			if cmd, ok := b.commands[commandKey(key)]; ok {
+				cmd.action(upd)
+			} else {
+				b.logger.Error("command handler not found", zap.String("cmd", key))
+			}
+			return
+		}
 
+		if cmd, ok := b.replyToCommand(upd.Message.Text); ok {
+			cmd.action(upd)
+			return
 		}
 	}
 }

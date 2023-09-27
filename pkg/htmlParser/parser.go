@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	macbook_pro_14_2021 = "#macbook_pro_14_2021_"
-	macbook_pro_16_2021 = "#macbook_pro_16_2021_"
-	mac_studio          = "#mac_studio_"
+	macbook_pro_14_2021 = "macbook_pro_14_2021_"
+	macbook_pro_16_2021 = "macbook_pro_16_2021_"
+	mac_studio          = "mac_studio_"
 )
 
 type HtmlParser struct {
@@ -57,8 +57,8 @@ func (p *HtmlParser) PrepareProducts() []tgbot.Product {
 		log.Fatal(err)
 	}
 
-	mac14 := p.prepareProducts(doc, macbook_pro_14_2021)
-	mac16 := p.prepareProducts(doc, macbook_pro_16_2021)
+	mac14 := p.prepareProducts(doc, "#"+macbook_pro_14_2021)
+	mac16 := p.prepareProducts(doc, "#"+macbook_pro_16_2021)
 
 	pp := append(mac14, mac16...)
 
