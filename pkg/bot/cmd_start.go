@@ -29,7 +29,7 @@ func (b *bot) CmdStart(upd tgbotapi.Update) {
 		UserName:  name,
 	}
 
-	_, err := b.service.FindOrCreate(u)
+	_, err := b.service.User.FindOrCreate(u)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

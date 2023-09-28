@@ -25,8 +25,18 @@ func (r *ProductSql) Update() {
 
 }
 
-func (r *ProductSql) GetByUserId() {
+func (r *ProductSql) GetByUserId(userId int) ([]tgbot.Product, error) {
+	var pp []tgbot.Product
 
+	query := fmt.Sprintf(`
+		select p.id as id, p.title as title, p.price as price, p.price_id as price_id, p.updated_at as updated_at from %s pl inner join %s p on pl.product_id = p.id
+		where pl.user_id = %d
+		order by pl.created_at
+	`, productsLists, productsTable, userId)
+
+	err := r.db.Select(&pp, query)
+
+	return pp, err
 }
 
 func (r *ProductSql) Prepare(products []tgbot.Product) error {

@@ -25,9 +25,9 @@ func New(url string) *HtmlParser {
 	return &HtmlParser{url: url}
 }
 
-func (p *HtmlParser) prepareProducts(sel *goquery.Selection, idNode string) []tgbot.Product {
+func (p *HtmlParser) prepareProducts(sel *goquery.Selection, idProduct string) []tgbot.Product {
 	pp := make([]tgbot.Product, 0)
-	sel.Find(idNode).Find("li").Not(":last-of-type").Each(func(_ int, sel *goquery.Selection) {
+	sel.Find("#" + idProduct).Find("li").Not(":last-of-type").Each(func(_ int, sel *goquery.Selection) {
 		arrStr := strings.Split(sel.Text(), " — ")
 		productName := arrStr[0]
 		pr := regexp.MustCompile("[0-9]+").FindString(strings.ReplaceAll(arrStr[1], " ", ""))
@@ -42,7 +42,7 @@ func (p *HtmlParser) prepareProducts(sel *goquery.Selection, idNode string) []tg
 		p := tgbot.Product{
 			Price:   int(price),
 			Title:   productName,
-			PriceId: idNode,
+			PriceId: idProduct,
 		}
 
 		pp = append(pp, p)
@@ -57,8 +57,8 @@ func (p *HtmlParser) PrepareProducts() []tgbot.Product {
 		log.Fatal(err)
 	}
 
-	mac14 := p.prepareProducts(doc, "#"+macbook_pro_14_2021)
-	mac16 := p.prepareProducts(doc, "#"+macbook_pro_16_2021)
+	mac14 := p.prepareProducts(doc, macbook_pro_14_2021)
+	mac16 := p.prepareProducts(doc, macbook_pro_16_2021)
 
 	pp := append(mac14, mac16...)
 

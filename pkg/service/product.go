@@ -3,6 +3,7 @@ package service
 import (
 	"log"
 
+	tgbot "github.com/Ivlay/go-telegram-bot"
 	"github.com/Ivlay/go-telegram-bot/pkg/htmlParser"
 	"github.com/Ivlay/go-telegram-bot/pkg/repository"
 )
@@ -20,8 +21,8 @@ func (r *ProductService) Create() {
 	r.repo.Create()
 }
 
-func (r *ProductService) GetByUserId() {
-	r.repo.GetByUserId()
+func (r *ProductService) GetByUserId(id int) ([]tgbot.Product, error) {
+	return r.repo.GetByUserId(id)
 }
 
 func (r *ProductService) Update() {

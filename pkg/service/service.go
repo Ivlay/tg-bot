@@ -14,7 +14,7 @@ type User interface {
 
 type Product interface {
 	Create()
-	GetByUserId()
+	GetByUserId(id int) ([]tgbot.Product, error)
 	Update()
 	Prepare()
 }

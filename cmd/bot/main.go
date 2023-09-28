@@ -22,6 +22,10 @@ var (
 	debug = flag.Bool("debug", false, "-debug=true")
 )
 
+func init() {
+	flag.Parse()
+}
+
 func main() {
 	if err := initConfig(); err != nil {
 		log.Fatalf("error init config: %s", err.Error())
@@ -67,6 +71,8 @@ func main() {
 	signal.Notify(stopCh, os.Interrupt, syscall.SIGTERM)
 
 	<-stopCh
+
+	logger.Info("Bot stopped")
 }
 
 func mustLogger(debug bool) *zap.Logger {

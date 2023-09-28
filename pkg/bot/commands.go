@@ -23,6 +23,11 @@ func (b *bot) initCommands() error {
 			desc:   "Запусить бота",
 			action: b.CmdStart,
 		},
+		{
+			key:    MySubscriptionCmdKey,
+			desc:   "Посмотреть мои подписики",
+			action: b.CmdSubscriptions,
+		},
 	}
 
 	tgCommands := make([]tgbotapi.BotCommand, 0, len(commands))
