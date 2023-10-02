@@ -14,8 +14,10 @@ type User interface {
 type Product interface {
 	Create()
 	Update()
-	GetByUserId(id int) ([]tgbot.Product, error)
+	GetByUserIds(ids []int) ([]tgbot.Product, error)
 	Prepare(products []tgbot.Product) error
+	UpdateProducts(products []tgbot.Product) ([]int, error)
+	GetCount() (int64, error)
 }
 
 type Repository struct {

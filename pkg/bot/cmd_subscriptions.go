@@ -8,9 +8,9 @@ import (
 )
 
 func (b *bot) CmdSubscriptions(upd tgbotapi.Update) {
-	pp, err := b.service.Product.GetByUserId(int(upd.Message.From.ID))
+	pp, err := b.service.Product.GetByUserIds([]int{int(upd.Message.From.ID)})
 	if err != nil {
-		b.logger.Error("Filed to send subscriptions message", zap.Error(err))
+		b.logger.Error("Filed to get user subscriptions", zap.Error(err))
 		return
 	}
 

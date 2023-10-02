@@ -34,6 +34,15 @@ func (b *bot) CmdStart(upd tgbotapi.Update) {
 		log.Fatal(err.Error())
 	}
 
+	data, err := b.service.UpdateProducts()
+	if err != nil {
+		b.logger.Error("error while update products", zap.Error(err))
+	}
+
+	if data != nil {
+		b.logger.Info("data updated", zap.Any("data", data))
+	}
+
 	message := `Добро пожаловать в <b>AJ price check</b>, %s!`
 
 	reply := tgbotapi.NewMessage(upd.Message.Chat.ID, fmt.Sprintf(message, name))

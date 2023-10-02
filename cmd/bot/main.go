@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/Ivlay/go-telegram-bot/pkg/bot"
 	"github.com/Ivlay/go-telegram-bot/pkg/htmlParser"
@@ -19,14 +21,22 @@ import (
 )
 
 var (
-	debug = flag.Bool("debug", false, "-debug=true")
+	debug    = flag.Bool("debug", false, "-debug=true")
+	schedule = flag.String("schedule", "@every 6h", "-schedule=@every 6h")
 )
 
 func init() {
 	flag.Parse()
 }
 
+func Log(message time.Time) {
+	fmt.Printf("Message from cron %s\n", message)
+}
+
 func main() {
+	logger := mustLogger(*debug)
+	// cron := cron.New(cron.WithLogger(cron.DefaultLogger))
+
 	if err := initConfig(); err != nil {
 		log.Fatalf("error init config: %s", err.Error())
 	}
@@ -53,8 +63,6 @@ func main() {
 		log.Fatal("bot token must be provided")
 	}
 
-	logger := mustLogger(*debug)
-
 	parser := htmlParser.New("https://aj.ru/")
 	repos := repository.New(db)
 	service := service.New(repos, parser)
@@ -63,9 +71,15 @@ func main() {
 		log.Fatal("failed to create bot", err.Error())
 	}
 
+	service.Product.Prepare()
+
 	bot.Debug = *debug
 
 	go bot.Run()
+
+	bot.Schedule()
+
+	// cron.Start()
 
 	stopCh := make(chan os.Signal, 1)
 	signal.Notify(stopCh, os.Interrupt, syscall.SIGTERM)
