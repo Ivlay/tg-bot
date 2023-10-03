@@ -44,7 +44,7 @@ func (r *ProductSql) UpdateProducts(products []tgbot.Product) ([]int, error) {
 
 	query := fmt.Sprintf(`
 		update %s
-			set price = :price, old_price = price
+			set price = :price
 			where price_id = :price_id and title = :title and price != :price
 			returning id
 	`, productsTable)
