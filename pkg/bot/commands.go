@@ -12,6 +12,7 @@ const (
 	StartCmdKey          = commandKey("start")
 	MySubscriptionCmdKey = commandKey("subscriptions")
 	ProductsKey          = commandKey("products")
+	OriginalSite         = commandKey("site")
 )
 
 type commandKey string
@@ -27,6 +28,11 @@ func (b *bot) initCommands() error {
 			key:    MySubscriptionCmdKey,
 			desc:   "Посмотреть мои подписики",
 			action: b.CmdSubscriptions,
+		},
+		{
+			key:    OriginalSite,
+			desc:   "Узнать откуда берутся цены",
+			action: b.CmdSite,
 		},
 	}
 
