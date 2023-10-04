@@ -21,8 +21,34 @@ func (r *ProductSql) Create() {
 
 }
 
-func (r *ProductSql) Update() {
+func (r *ProductSql) Update(products []tgbot.Product) ([]int, error) {
+	var ids []int
 
+	query := fmt.Sprintf(`
+		update %s
+			set price = :price
+			where price_id = :price_id and title = :title and price != :price
+			returning id
+	`, productsTable)
+
+	for _, product := range products {
+		rows, err := r.db.NamedQuery(query, product)
+		if err != nil {
+			return ids, err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var id int
+			err := rows.Scan(&id)
+			if err != nil {
+				return ids, err
+			}
+
+			ids = append(ids, id)
+		}
+	}
+
+	return ids, nil
 }
 
 func (r *ProductSql) GetByUserIds(userIds []int) ([]tgbot.Product, error) {

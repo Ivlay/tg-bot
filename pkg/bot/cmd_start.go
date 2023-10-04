@@ -34,7 +34,7 @@ func (b *bot) CmdStart(upd tgbotapi.Update) {
 		log.Fatal(err.Error())
 	}
 
-	data, err := b.service.UpdateProducts()
+	data, err := b.service.Product.Update()
 	if err != nil {
 		b.logger.Error("error while update products", zap.Error(err))
 	}
