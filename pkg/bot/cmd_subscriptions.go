@@ -24,10 +24,14 @@ func (b *bot) CmdSubscriptions(upd tgbotapi.Update) {
 		message := ""
 
 		for _, val := range pp {
-			message += fmt.Sprintf("%s - %d ₽\n", val.Title, val.Price)
+			if val.Price == 0 {
+				message += fmt.Sprintf("%s - цены пока что нет", val.Title)
+			} else {
+				message += fmt.Sprintf("%s - %d ₽\n", val.Title, val.Price)
+			}
 		}
 
-		reply := tgbotapi.NewMessage(upd.Message.Chat.ID, message)
+		reply := tgbotapi.NewMessage(upd.Message.Chat.ID, "Ваши текущие подписки:\n"+message)
 
 		if err := b.apiRequest(reply); err != nil {
 			b.logger.Error("Failed to send subscription message with values", zap.Error(err))
