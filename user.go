@@ -14,3 +14,10 @@ type UserList struct {
 	UserId    int
 	ProductId string
 }
+
+type UserWithProducts struct {
+	UserId   int    `json:"userId" db:"user_id"`
+	UserName string `json:"userName" db:"username"`
+	ChatId   int64  `json:"chatId" db:"chat_id"`
+	Products []Product
+}

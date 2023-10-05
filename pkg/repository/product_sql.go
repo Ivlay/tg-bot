@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"strings"
 
 	tgbot "github.com/Ivlay/go-telegram-bot"
 	"github.com/jmoiron/sqlx"
@@ -51,18 +52,53 @@ func (r *ProductSql) Update(products []tgbot.Product) ([]int, error) {
 	return ids, nil
 }
 
-func (r *ProductSql) GetByUserIds(userIds []int) ([]tgbot.Product, error) {
-	var pp []tgbot.Product
+func (r *ProductSql) GetByUserIds(productIds []int) ([]tgbot.UserWithProducts, error) {
+	ids := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(productIds)), ", "), "[]")
 
-	query := fmt.Sprintf(`
-		select p.id as id, p.title as title, p.price as price, p.price_id as price_id, p.updated_at as updated_at from %s pl inner join %s p on pl.product_id = p.id
-		where pl.user_id in (%d)
-		order by pl.created_at
-	`, productsLists, productsTable, userIds)
+	query1 := fmt.Sprintf(`
+		select u.chat_id, u.user_id, u.username, p.title, p.price, p.old_price, p.updated_at
+		from %s pl
+		join %s p on pl.product_id = p.id
+		join %s u on pl.user_id = u.id
+		where pl.product_id = any(array[%s])
+	`, productsListsTable, productsTable, usersTable, ids)
 
-	err := r.db.Select(&pp, query)
+	rows, err := r.db.Query(query1)
+	if err != nil {
+		return nil, err
+	}
 
-	return pp, err
+	defer rows.Close()
+
+	usersMap := make(map[int]*tgbot.UserWithProducts)
+
+	for rows.Next() {
+		var user tgbot.UserWithProducts
+		var product tgbot.Product
+
+		err := rows.Scan(&user.ChatId, &user.UserId, &user.UserName, &product.Title, &product.Price, &product.OldPrice, &product.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		if existingUser, ok := usersMap[user.UserId]; ok {
+			existingUser.Products = append(existingUser.Products, product)
+		} else {
+			user.Products = []tgbot.Product{product}
+			usersMap[user.UserId] = &user
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	users := make([]tgbot.UserWithProducts, 0, len(usersMap))
+	for _, user := range usersMap {
+		users = append(users, *user)
+	}
+
+	return users, nil
 }
 
 func (r *ProductSql) UpdateProducts(products []tgbot.Product) ([]int, error) {

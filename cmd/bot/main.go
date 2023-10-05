@@ -77,7 +77,7 @@ func main() {
 
 	go bot.Run()
 
-	bot.Schedule()
+	bot.CheckPrice()
 
 	// cron.Start()
 

@@ -22,13 +22,13 @@ func (p *ProductService) Create() {
 	p.repo.Create()
 }
 
-func (p *ProductService) GetByUserIds(id []int) ([]tgbot.Product, error) {
+func (p *ProductService) GetByUserIds(id []int) ([]tgbot.UserWithProducts, error) {
 	return p.repo.GetByUserIds(id)
 }
 
 func (p *ProductService) Update() ([]int, error) {
 	products := []tgbot.Product{
-		{Title: `Pro 14" M1 Pro 8-Core/ 16GB/ 512GB SSD 14-core GPU`, PriceId: "macbook_pro_14_2021_", Price: rand.Intn(120000)},
+		{Title: `Pro 16" M1 Pro 10-Core/ 16GB/ 512GB SSD 16-core GPU`, PriceId: "macbook_pro_16_2021_", Price: rand.Intn(120000)},
 		{Title: `Pro 16" M1 Max 10-Core/ 32GB/ 1TB SSD 32-core GPU`, PriceId: "macbook_pro_16_2021_", Price: rand.Intn(170000)},
 	}
 

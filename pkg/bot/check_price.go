@@ -14,25 +14,26 @@ func (b *bot) CheckPrice() {
 	}
 
 	if len(ids) > 0 {
-		pp, err := b.service.Product.GetByUserIds(ids)
+		uu, err := b.service.Product.GetByUserIds(ids)
 		if err != nil {
 			b.logger.Error("error while get user subscriptions", zap.Error(err))
 			return
 		}
 
-		defaultGreeting := "Привет! Цена на товар изменилась:"
-		products := ""
-		// TODO: create new struct with user and products
-		for _, p := range pp {
-			products += fmt.Sprintf("%s - %d ₽, <s>%d ₽<s>", p.Title, p.Price, p.OldPrice)
-		}
+		if uu != nil {
+			defaultGreeting := "Привет! Цена на товар изменилась:\n"
+			products := ""
+			for _, u := range uu {
+				for _, p := range u.Products {
+					products += fmt.Sprintf("%s - %d ₽, <s>%d ₽</s>\n", p.Title, p.Price, p.OldPrice)
+				}
+				reply := tgbotapi.NewMessage(u.ChatId, defaultGreeting+products)
+				reply.ParseMode = "html"
+				if err := b.apiRequest(reply); err != nil {
+					b.logger.Error("Failed to send start message", zap.Error(err))
+				}
+			}
 
-		reply := tgbotapi.NewMessage(1, defaultGreeting+products)
-
-		reply.ParseMode = "html"
-
-		if err := b.apiRequest(reply); err != nil {
-			b.logger.Error("Failed to send start message", zap.Error(err))
 		}
 	}
 }
