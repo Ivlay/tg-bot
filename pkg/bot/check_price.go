@@ -14,7 +14,7 @@ func (b *bot) CheckPrice() {
 	}
 
 	if len(ids) > 0 {
-		uu, err := b.service.Product.GetByUserIds(ids)
+		uu, err := b.service.Product.GetByIdsWithUser(ids)
 		if err != nil {
 			b.logger.Error("error while get user subscriptions", zap.Error(err))
 			return

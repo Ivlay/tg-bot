@@ -22,8 +22,8 @@ func (p *ProductService) Create() {
 	p.repo.Create()
 }
 
-func (p *ProductService) GetByUserIds(id []int) ([]tgbot.UserWithProducts, error) {
-	return p.repo.GetByUserIds(id)
+func (p *ProductService) GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProducts, error) {
+	return p.repo.GetByIdsWithUser(productIds)
 }
 
 func (p *ProductService) Update() ([]int, error) {

@@ -52,7 +52,7 @@ func (r *ProductSql) Update(products []tgbot.Product) ([]int, error) {
 	return ids, nil
 }
 
-func (r *ProductSql) GetByUserIds(productIds []int) ([]tgbot.UserWithProducts, error) {
+func (r *ProductSql) GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProducts, error) {
 	ids := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(productIds)), ", "), "[]")
 
 	query1 := fmt.Sprintf(`
@@ -93,12 +93,12 @@ func (r *ProductSql) GetByUserIds(productIds []int) ([]tgbot.UserWithProducts, e
 		return nil, err
 	}
 
-	users := make([]tgbot.UserWithProducts, 0, len(usersMap))
+	usersWithProduct := make([]tgbot.UserWithProducts, 0, len(usersMap))
 	for _, user := range usersMap {
-		users = append(users, *user)
+		usersWithProduct = append(usersWithProduct, *user)
 	}
 
-	return users, nil
+	return usersWithProduct, nil
 }
 
 func (r *ProductSql) UpdateProducts(products []tgbot.Product) ([]int, error) {
