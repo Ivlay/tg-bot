@@ -101,6 +101,16 @@ func (r *ProductSql) GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProduct
 	return usersWithProduct, nil
 }
 
+func (r *ProductSql) GetByUserId(userId int) ([]tgbot.Product, error) {
+	query := fmt.Sprintf(`
+		select p.title, p.price, p.updated_at
+		from %s pl
+		join %s p on pl.product_id = p.id
+		where pl.user_id = $1
+		order by pl.created_at
+	`)
+}
+
 func (r *ProductSql) UpdateProducts(products []tgbot.Product) ([]int, error) {
 	var ids []int
 
