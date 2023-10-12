@@ -51,6 +51,10 @@ func (p *ProductService) Prepare() {
 	}
 }
 
+func (r *ProductService) GetByUserId(userId int) ([]tgbot.Product, error) {
+	return r.repo.GetByUserId(userId)
+}
+
 func (p *ProductService) GetProductsListByProductId([]int) {
 
 }

@@ -59,7 +59,7 @@ func (r *ProductSql) GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProduct
 		select u.chat_id, u.user_id, u.username, p.title, p.price, p.old_price, p.updated_at
 		from %s pl
 		join %s p on pl.product_id = p.id
-		join %s u on pl.user_id = u.id
+		join %s u on pl.user_id = u.user_id
 		where pl.product_id = any(array[%s])
 	`, productsListsTable, productsTable, usersTable, ids)
 
@@ -102,13 +102,19 @@ func (r *ProductSql) GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProduct
 }
 
 func (r *ProductSql) GetByUserId(userId int) ([]tgbot.Product, error) {
+	var pp []tgbot.Product
+
 	query := fmt.Sprintf(`
-		select p.title, p.price, p.updated_at
+		select p.title, p.price, p.updated_at, p.price
 		from %s pl
 		join %s p on pl.product_id = p.id
-		where pl.user_id = $1
+		where pl.user_id = %d
 		order by pl.created_at
-	`)
+	`, productsListsTable, productsTable, userId)
+
+	err := r.db.Select(&pp, query)
+
+	return pp, err
 }
 
 func (r *ProductSql) UpdateProducts(products []tgbot.Product) ([]int, error) {

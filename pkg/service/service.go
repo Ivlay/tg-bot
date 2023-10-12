@@ -17,6 +17,7 @@ type Product interface {
 	GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProducts, error)
 	Update() ([]int, error)
 	Prepare()
+	GetByUserId(userId int) ([]tgbot.Product, error)
 }
 
 type Parser interface {
