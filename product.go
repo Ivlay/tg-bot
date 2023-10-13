@@ -15,3 +15,8 @@ type ProductList struct {
 	UserId    int    `json:"userId" db:"user_id"`
 	CreatedAt string `json:"createdAt" db:"created_at"`
 }
+
+type ProductSubscriptions struct {
+	Title         string `json:"title" db:"title"`
+	Subscriptions int    `json:"subscribes" db:"subscriptions"`
+}

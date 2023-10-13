@@ -14,10 +14,12 @@ type User interface {
 
 type Product interface {
 	Create()
+	GetAllProducts() ([]tgbot.Product, error)
 	GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProducts, error)
+	GetByUserId(userId int) ([]tgbot.Product, error)
+	GetProductsListByProductId() ([]tgbot.ProductSubscriptions, error)
 	Update() ([]int, error)
 	Prepare()
-	GetByUserId(userId int) ([]tgbot.Product, error)
 }
 
 type Parser interface {

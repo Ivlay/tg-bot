@@ -22,6 +22,10 @@ func (p *ProductService) Create() {
 	p.repo.Create()
 }
 
+func (p *ProductService) GetAllProducts() ([]tgbot.Product, error) {
+	return p.repo.GetAllProducts()
+}
+
 func (p *ProductService) GetByIdsWithUser(productIds []int) ([]tgbot.UserWithProducts, error) {
 	return p.repo.GetByIdsWithUser(productIds)
 }
@@ -55,6 +59,6 @@ func (r *ProductService) GetByUserId(userId int) ([]tgbot.Product, error) {
 	return r.repo.GetByUserId(userId)
 }
 
-func (p *ProductService) GetProductsListByProductId([]int) {
-
+func (r *ProductService) GetProductsListByProductId() ([]tgbot.ProductSubscriptions, error) {
+	return r.repo.GetProductsListSubscriptions()
 }

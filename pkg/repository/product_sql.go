@@ -22,6 +22,18 @@ func (r *ProductSql) Create() {
 
 }
 
+func (r *ProductSql) GetAllProducts() ([]tgbot.Product, error) {
+	var pp []tgbot.Product
+
+	query := fmt.Sprintf(`
+		select * from %s
+	`, productsTable)
+
+	err := r.db.Select(&pp, query)
+
+	return pp, err
+}
+
 func (r *ProductSql) Update(products []tgbot.Product) ([]int, error) {
 	var ids []int
 
@@ -174,4 +186,19 @@ func (r *ProductSql) GetCount() (int64, error) {
 	}
 
 	return rowCount, nil
+}
+
+func (r *ProductSql) GetProductsListSubscriptions() ([]tgbot.ProductSubscriptions, error) {
+	var ps []tgbot.ProductSubscriptions
+
+	query := fmt.Sprintf(`
+		select p.title, count(p) as subscribers
+		from %s pl
+		join %s p on pl.product_id = p.id
+		group by p.title
+	`, productsListsTable, productsTable)
+
+	err := r.db.Select(&ps, query)
+
+	return ps, err
 }

@@ -1,6 +1,9 @@
 package bot
 
-import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+import (
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"go.uber.org/zap"
+)
 
 type commandEntity struct {
 	key    commandKey
@@ -54,6 +57,7 @@ func (b *bot) replyToCommand(text string) (commandEntity, bool) {
 	switch replyKeyboardValue(text) {
 	case ReplyProducts:
 		cmd, ok := b.commands[ProductsKey]
+		b.logger.Info("CMD", zap.Any("CMD TOVARI", cmd))
 		return cmd, ok
 	}
 

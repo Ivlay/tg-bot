@@ -1,8 +1,15 @@
 package bot
 
 import (
+	"strings"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"go.uber.org/zap"
+)
+
+const (
+	productPrefix   = "Товары"
+	analyticsPrefix = "Аналитика"
 )
 
 func (b *bot) Run() {
@@ -31,6 +38,10 @@ func (b *bot) processUpdate(upd tgbotapi.Update) {
 		if cmd, ok := b.replyToCommand(upd.Message.Text); ok {
 			cmd.action(upd)
 			return
+		}
+
+		if strings.HasPrefix(upd.Message.Text, productPrefix) {
+			b.CmdProducts(upd)
 		}
 	}
 }
