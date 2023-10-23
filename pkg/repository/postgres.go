@@ -34,7 +34,7 @@ func NewPostgresDB(cfg Config, logger *zap.Logger) (*sqlx.DB, error) {
 		Database: cfg.DBName,
 	}
 
-	connConfig.Logger = zapadapter.NewLogger(logger)
+	connConfig.Logger = zapadapter.NewLogger(logger.Named("database"))
 
 	connPoll, err := pgx.NewConnPool(pgx.ConnPoolConfig{
 		ConnConfig:     connConfig,
